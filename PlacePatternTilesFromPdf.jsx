@@ -69,10 +69,14 @@ function myChooseDocument() {
       // --if you don't do this, getting objects to the correct position on the
       // page is much more difficult.
       myDocument.viewPreferences.rulerOrigin = RulerOrigin.pageOrigin;
+
       var pageNumberLayer = myDocument.layers.add();
       with(pageNumberLayer) {
         name = "TilePageNumbers";
       }
+      var tileOutlineLayer = myDocument.layers.add();
+      tileOutlineLayer.name = "tileOutlines";
+
       with(myDocument.masterSpreads.item(0)) {
         var pageNumberTextFrame = textFrames.add(pageNumberLayer);
         with(pageNumberTextFrame) {
@@ -82,7 +86,13 @@ function myChooseDocument() {
           insertionPoints.item(-1).contents = SpecialCharacters.autoPageNumber;
           paragraphs.item(0).justification = Justification.rightAlign;
         }
+        var tileOutline = rectangles.add(tileOutlineLayer);
+        with(tileOutline) {
+          geometricBounds = ["0.5in", "1in", "10.5in", "7.5in"];
+          strokeTint = 25;
+        }
       }
+
     }
     else {
       myDocument = app.documents.item(myChooseDocumentDropdown.selectedIndex-1);
