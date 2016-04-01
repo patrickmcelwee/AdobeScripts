@@ -58,11 +58,31 @@ function myChooseDocument() {
         pageWidth =  "8.5in";
         pageHeight = "11in";
         pageOrientation = PageOrientation.portrait;
+        facingPages = false;
       }
       myDocument.marginPreferences.top =    "0.5in";
       myDocument.marginPreferences.bottom = "0.5in";
-      myDocument.marginPreferences.left =   "1.0in";
-      myDocument.marginPreferences.right =  "1.0in";
+      myDocument.marginPreferences.left =   "0.5in";
+      myDocument.marginPreferences.right =  "0.5in";
+
+      // Set the document's ruler origin to page origin. This is very important
+      // --if you don't do this, getting objects to the correct position on the
+      // page is much more difficult.
+      myDocument.viewPreferences.rulerOrigin = RulerOrigin.pageOrigin;
+      var pageNumberLayer = myDocument.layers.add();
+      with(pageNumberLayer) {
+        name = "TilePageNumbers";
+      }
+      with(myDocument.masterSpreads.item(0)) {
+        var pageNumberTextFrame = textFrames.add(pageNumberLayer);
+        with(pageNumberTextFrame) {
+          geometricBounds = ["5.2in", "5.35in", "5in", "0.85in"];
+          rotationAngle = 90;
+          insertionPoints.item(-1).contents = "Sew Liberated - Myla Tank - Page ";
+          insertionPoints.item(-1).contents = SpecialCharacters.autoPageNumber;
+          paragraphs.item(0).justification = Justification.rightAlign;
+        }
+      }
     }
     else {
       myDocument = app.documents.item(myChooseDocumentDropdown.selectedIndex-1);
@@ -110,7 +130,7 @@ function myPlacePDF(myDocument, myPage, myPDFFile) {
       myPage = myDocument.pages.add(LocationOptions.after, myPage);
     }
     app.pdfPlacePreferences.pageNumber = myCounter;
-    myPDFPage = myPage.place(File(myPDFFile), [6,3])[0];
+    myPDFPage = myPage.place(File(myPDFFile), ["1in", "0.5in"])[0];
     if (myCounter == 1) {
       var myFirstPage = myPDFPage.pdfAttributes.pageNumber;
     }
