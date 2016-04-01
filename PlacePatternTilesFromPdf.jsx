@@ -7,12 +7,12 @@
 //or visit the InDesign Scripting User to User forum at http://www.adobeforums.com
 //
 main();
-function main(){
+function main() {
   //Make certain that user interaction (display of dialogs, etc.) is turned on.
   app.scriptPreferences.userInteractionLevel = UserInteractionLevels.interactWithAll;
   //Display a standard Open File dialog box.
   var myPDFFile = File.openDialog("Choose a PDF File");
-  if ((myPDFFile != "") && (myPDFFile != null)){
+  if ((myPDFFile != "") && (myPDFFile != null)) {
     var myDocument, myPage;
     if (app.documents.length != 0) {
       var myTemp = myChooseDocument();
@@ -22,37 +22,37 @@ function main(){
       myDocument = app.documents.add();
     }
 
-    if(myDocument.pages.length > 1){
+    if (myDocument.pages.length > 1) {
       myPage = myChoosePage(myDocument);
     }
-    else{
+    else {
       myPage = myDocument.pages.item(0);
     }
     myPlacePDF(myDocument, myPage, myPDFFile);
   }
 }
 
-function myChooseDocument(){
+function myChooseDocument() {
   var myDocumentNames = new Array;
   myDocumentNames.push("New Document");
   //Get the names of the documents
-  for(var myDocumentCounter = 0;myDocumentCounter < app.documents.length; myDocumentCounter++){
+  for(var myDocumentCounter = 0;myDocumentCounter < app.documents.length; myDocumentCounter++) {
     myDocumentNames.push(app.documents.item(myDocumentCounter).name);
   }
   var myChooseDocumentDialog = app.dialogs.add({name:"Choose a Document", canCancel:false});
-  with(myChooseDocumentDialog.dialogColumns.add()){
-    with(dialogRows.add()){
-      with(dialogColumns.add()){
+  with(myChooseDocumentDialog.dialogColumns.add()) {
+    with(dialogRows.add()) {
+      with(dialogColumns.add()) {
         staticTexts.add({staticLabel:"Place PDF in:"});
       }
-      with(dialogColumns.add()){
+      with(dialogColumns.add()) {
         var myChooseDocumentDropdown = dropdowns.add({stringList:myDocumentNames, selectedIndex:0});
       }
     }
   }
   var myResult = myChooseDocumentDialog.show();
-  if(myResult == true){
-    if(myChooseDocumentDropdown.selectedIndex == 0){
+  if (myResult == true) {
+    if (myChooseDocumentDropdown.selectedIndex == 0) {
       myDocument = app.documents.add();
       with(myDocument.documentPreferences) {
         pageWidth =  "8.5in";
@@ -64,32 +64,32 @@ function myChooseDocument(){
       myDocument.marginPreferences.left =   "1.0in";
       myDocument.marginPreferences.right =  "1.0in";
     }
-    else{
+    else {
       myDocument = app.documents.item(myChooseDocumentDropdown.selectedIndex-1);
     }
     myChooseDocumentDialog.destroy();
   }
-  else{
+  else {
     myDocument = "";
     myChooseDocumentDialog.destroy();
   }
   return [myDocument];
 }
 
-function myChoosePage(myDocument){
+function myChoosePage(myDocument) {
   alert(myDocument.name);
   var myPageNames = new Array;
   //Get the names of the pages in the document
-  for(var myCounter = 0; myCounter < myDocument.pages.length;myCounter++){
+  for(var myCounter = 0; myCounter < myDocument.pages.length;myCounter++) {
     myPageNames.push(myDocument.pages.item(myCounter).name);
   }
   var myChoosePageDialog = app.dialogs.add({name:"Choose a Page", canCancel:false});
-  with(myChoosePageDialog.dialogColumns.add()){
-    with(dialogRows.add()){
-      with(dialogColumns.add()){
+  with(myChoosePageDialog.dialogColumns.add()) {
+    with(dialogRows.add()) {
+      with(dialogColumns.add()) {
         staticTexts.add({staticLabel:"Place PDF on:"});
       }
-      with(dialogColumns.add()){
+      with(dialogColumns.add()) {
         var myChoosePageDropdown = dropdowns.add({stringList:myPageNames, selectedIndex:0});
       }
     }
@@ -100,22 +100,22 @@ function myChoosePage(myDocument){
   return myPage;
 }
 
-function myPlacePDF(myDocument, myPage, myPDFFile){
+function myPlacePDF(myDocument, myPage, myPDFFile) {
   var myPDFPage;
   app.pdfPlacePreferences.pdfCrop = PDFCrop.cropMedia;
   var myCounter = 1;
   var myBreak = false;
-  while(myBreak == false){
-    if(myCounter > 1){
+  while(myBreak == false) {
+    if (myCounter > 1) {
       myPage = myDocument.pages.add(LocationOptions.after, myPage);
     }
     app.pdfPlacePreferences.pageNumber = myCounter;
     myPDFPage = myPage.place(File(myPDFFile), [6,3])[0];
-    if(myCounter == 1){
+    if (myCounter == 1) {
       var myFirstPage = myPDFPage.pdfAttributes.pageNumber;
     }
-    else{
-      if(myPDFPage.pdfAttributes.pageNumber == myFirstPage){
+    else {
+      if (myPDFPage.pdfAttributes.pageNumber == myFirstPage) {
         myPage.remove();
         myBreak = true;
       }
