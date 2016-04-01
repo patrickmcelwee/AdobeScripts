@@ -54,6 +54,15 @@ function myChooseDocument(){
   if(myResult == true){
     if(myChooseDocumentDropdown.selectedIndex == 0){
       myDocument = app.documents.add();
+      with(myDocument.documentPreferences) {
+        pageWidth =  "8.5in";
+        pageHeight = "11in";
+        pageOrientation = PageOrientation.portrait;
+      }
+      myDocument.marginPreferences.top =    "0.5in";
+      myDocument.marginPreferences.bottom = "0.5in";
+      myDocument.marginPreferences.left =   "1.0in";
+      myDocument.marginPreferences.right =  "1.0in";
     }
     else{
       myDocument = app.documents.item(myChooseDocumentDropdown.selectedIndex-1);
