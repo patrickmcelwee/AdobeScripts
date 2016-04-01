@@ -107,7 +107,7 @@ function myPlacePDF(myDocument, myPage, myPDFFile){
                         myPage = myDocument.pages.add(LocationOptions.after, myPage);
                 }
                 app.pdfPlacePreferences.pageNumber = myCounter;
-                myPDFPage = myPage.place(File(myPDFFile), [0,0])[0];
+                myPDFPage = myPage.place(File(myPDFFile), [6,3])[0];
                 if(myCounter == 1){
                         var myFirstPage = myPDFPage.pdfAttributes.pageNumber;
                 }
