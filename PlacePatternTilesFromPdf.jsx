@@ -80,7 +80,12 @@ function myChooseDocument() {
       with(myDocument.masterSpreads.item(0)) {
         var pageNumberTextFrame = textFrames.add(pageNumberLayer);
         with(pageNumberTextFrame) {
-          geometricBounds = ["5.2in", "5.35in", "5in", "0.85in"];
+          geometricBounds = [
+            "5.2in",  // y1
+            "5.3in", // x1
+            "5in",    // y2
+            "0.8in"  // x2
+          ];
           rotationAngle = 90;
           insertionPoints.item(-1).contents = "Sew Liberated - Myla Tank - Page ";
           insertionPoints.item(-1).contents = SpecialCharacters.autoPageNumber;
