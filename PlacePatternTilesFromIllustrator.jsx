@@ -28,8 +28,73 @@ function main() {
     else {
       myPage = myDocument.pages.item(0);
     }
+
+    var patternName = getPatternName();
+
+    with(myDocument.documentPreferences) {
+      pageWidth =  "8.5in";
+      pageHeight = "11in";
+      pageOrientation = PageOrientation.portrait;
+      facingPages = false;
+    }
+    myDocument.marginPreferences.top =    "0.5in";
+    myDocument.marginPreferences.bottom = "0.5in";
+    myDocument.marginPreferences.left =   "0.5in";
+    myDocument.marginPreferences.right =  "0.5in";
+
+    // Set the document's ruler origin to page origin. This is very important
+    // --if you don't do this, getting objects to the correct position on the
+    // page is much more difficult.
+    myDocument.viewPreferences.rulerOrigin = RulerOrigin.pageOrigin;
+
+    var pageNumberLayer = myDocument.layers.add();
+    with(pageNumberLayer) {
+      name = "TilePageNumbers";
+    }
+    var tileOutlineLayer = myDocument.layers.add();
+    tileOutlineLayer.name = "tileOutlines";
+
+    with(myDocument.masterSpreads.item(0)) {
+      var pageNumberTextFrame = textFrames.add(pageNumberLayer);
+      with(pageNumberTextFrame) {
+        geometricBounds = [
+          "5.2in",  // y1
+          "5.3in", // x1
+          "5in",    // y2
+          "0.8in"  // x2
+        ];
+        rotationAngle = 90;
+        insertionPoints.item(-1).contents = "Sew Liberated - " + patternName + " - Page ";
+        insertionPoints.item(-1).contents = SpecialCharacters.autoPageNumber;
+        paragraphs.item(0).justification = Justification.rightAlign;
+      }
+      var tileOutline = rectangles.add(tileOutlineLayer);
+      with(tileOutline) {
+        geometricBounds = ["0.5in", "1in", "10.5in", "7.5in"];
+        strokeTint = 25;
+      }
+    }
     myPlacePDF(myDocument, myPage, myPDFFile);
   }
+}
+
+function getPatternName() {
+  var patternNameDialog = app.dialogs.add({
+    name: 'Pattern Name',
+    canCancel: false
+  });
+  with(patternNameDialog.dialogColumns.add()) {
+    var patternNameField = textEditboxes.add({
+      editContents: 'Enter the name of this pattern',
+      minWidth: 180
+    });
+  }
+  var result = patternNameDialog.show();
+  if (result === true) {
+    var patternName = patternNameField.editContents;
+  }
+  patternNameDialog.destroy();
+  return patternName;
 }
 
 function myChooseDocument() {
@@ -39,7 +104,9 @@ function myChooseDocument() {
   for(var myDocumentCounter = 0;myDocumentCounter < app.documents.length; myDocumentCounter++) {
     myDocumentNames.push(app.documents.item(myDocumentCounter).name);
   }
-  var myChooseDocumentDialog = app.dialogs.add({name:"Choose a Document", canCancel:false});
+  var myChooseDocumentDialog = app.dialogs.add(
+      {name:"Choose a Document", canCancel:false}
+  );
   with(myChooseDocumentDialog.dialogColumns.add()) {
     with(dialogRows.add()) {
       with(dialogColumns.add()) {
@@ -54,49 +121,6 @@ function myChooseDocument() {
   if (myResult == true) {
     if (myChooseDocumentDropdown.selectedIndex == 0) {
       myDocument = app.documents.add();
-      with(myDocument.documentPreferences) {
-        pageWidth =  "8.5in";
-        pageHeight = "11in";
-        pageOrientation = PageOrientation.portrait;
-        facingPages = false;
-      }
-      myDocument.marginPreferences.top =    "0.5in";
-      myDocument.marginPreferences.bottom = "0.5in";
-      myDocument.marginPreferences.left =   "0.5in";
-      myDocument.marginPreferences.right =  "0.5in";
-
-      // Set the document's ruler origin to page origin. This is very important
-      // --if you don't do this, getting objects to the correct position on the
-      // page is much more difficult.
-      myDocument.viewPreferences.rulerOrigin = RulerOrigin.pageOrigin;
-
-      var pageNumberLayer = myDocument.layers.add();
-      with(pageNumberLayer) {
-        name = "TilePageNumbers";
-      }
-      var tileOutlineLayer = myDocument.layers.add();
-      tileOutlineLayer.name = "tileOutlines";
-
-      with(myDocument.masterSpreads.item(0)) {
-        var pageNumberTextFrame = textFrames.add(pageNumberLayer);
-        with(pageNumberTextFrame) {
-          geometricBounds = [
-            "5.2in",  // y1
-            "5.3in", // x1
-            "5in",    // y2
-            "0.8in"  // x2
-          ];
-          rotationAngle = 90;
-          insertionPoints.item(-1).contents = "Sew Liberated - Myla Tank - Page ";
-          insertionPoints.item(-1).contents = SpecialCharacters.autoPageNumber;
-          paragraphs.item(0).justification = Justification.rightAlign;
-        }
-        var tileOutline = rectangles.add(tileOutlineLayer);
-        with(tileOutline) {
-          geometricBounds = ["0.5in", "1in", "10.5in", "7.5in"];
-          strokeTint = 25;
-        }
-      }
 
     }
     else {
