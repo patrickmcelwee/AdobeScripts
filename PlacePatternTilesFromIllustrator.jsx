@@ -56,9 +56,9 @@ function main() {
     var master = myDocument.masterSpreads.item(0);
     var pageNumberTextFrame = master.textFrames.add(pageNumberLayer);
     pageNumberTextFrame.geometricBounds = [
-      "5.2in",  // y1
-      "5.3in", // x1
-      "5in",    // y2
+      "6.2in",  // y1
+      "6.3in", // x1
+      "6in",    // y2
       "0.8in"  // x2
     ];
     pageNumberTextFrame.rotationAngle = 90;
