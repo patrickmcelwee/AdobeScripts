@@ -12,9 +12,9 @@ function main() {
   app.scriptPreferences.userInteractionLevel = UserInteractionLevels.interactWithAll;
   //Display a standard Open File dialog box.
   var myPDFFile = File.openDialog("Choose a PDF File");
-  if ((myPDFFile != "") && (myPDFFile != null)) {
+  if ((myPDFFile !== "") && (myPDFFile !== null)) {
     var myDocument, myPage;
-    if (app.documents.length != 0) {
+    if (app.documents.length !== 0) {
       var myTemp = myChooseDocument();
       myDocument = myTemp[0];
     }
@@ -31,12 +31,12 @@ function main() {
 
     var patternName = getPatternName();
 
-    with(myDocument.documentPreferences) {
-      pageWidth =  "8.5in";
-      pageHeight = "11in";
-      pageOrientation = PageOrientation.portrait;
-      facingPages = false;
-    }
+    var docPref = myDocument.documentPreferences;
+    docPref.pageWidth =  "8.5in";
+    docPref.pageHeight = "11in";
+    docPref.pageOrientation = PageOrientation.portrait;
+    docPref.facingPages = false;
+
     myDocument.marginPreferences.top =    "0.5in";
     myDocument.marginPreferences.bottom = "0.5in";
     myDocument.marginPreferences.left =   "0.5in";
@@ -48,57 +48,53 @@ function main() {
     myDocument.viewPreferences.rulerOrigin = RulerOrigin.pageOrigin;
 
     var pageNumberLayer = myDocument.layers.add();
-    with(pageNumberLayer) {
-      name = "TilePageNumbers";
-    }
+    pageNumberLayer.name = "TilePageNumbers";
+
     var tileOutlineLayer = myDocument.layers.add();
     tileOutlineLayer.name = "tileOutlines";
 
-    with(myDocument.masterSpreads.item(0)) {
-      var pageNumberTextFrame = textFrames.add(pageNumberLayer);
-      with(pageNumberTextFrame) {
-        geometricBounds = [
-          "5.2in",  // y1
-          "5.3in", // x1
-          "5in",    // y2
-          "0.8in"  // x2
-        ];
-        rotationAngle = 90;
-        insertionPoints.item(-1).contents = "Sew Liberated - " + patternName + " - Page ";
-        insertionPoints.item(-1).contents = SpecialCharacters.autoPageNumber;
-        paragraphs.item(0).justification = Justification.rightAlign;
-      }
-      var tileOutline = rectangles.add(tileOutlineLayer);
-      with(tileOutline) {
-        geometricBounds = ["0.5in", "1in", "10.5in", "7.5in"];
-        strokeTint = 25;
-      }
-    }
+    var master = myDocument.masterSpreads.item(0);
+    var pageNumberTextFrame = master.textFrames.add(pageNumberLayer);
+    pageNumberTextFrame.geometricBounds = [
+      "5.2in",  // y1
+      "5.3in", // x1
+      "5in",    // y2
+      "0.8in"  // x2
+    ];
+    pageNumberTextFrame.rotationAngle = 90;
+    pageNumberTextFrame.insertionPoints.item(-1).contents = "Sew Liberated - " + patternName + " - Page ";
+    pageNumberTextFrame.insertionPoints.item(-1).contents = SpecialCharacters.autoPageNumber;
+    pageNumberTextFrame.paragraphs.item(0).justification = Justification.rightAlign;
+
+    var tileOutline = master.rectangles.add(tileOutlineLayer);
+    tileOutline.geometricBounds = ["0.5in", "1in", "10.5in", "7.5in"];
+    tileOutline.strokeTint = 25;
+
     myPlacePDF(myDocument, myPage, myPDFFile);
   }
 }
 
 function getPatternName() {
+  var patternName;
   var patternNameDialog = app.dialogs.add({
     name: 'Pattern Name',
     canCancel: false
   });
-  with(patternNameDialog.dialogColumns.add()) {
-    var patternNameField = textEditboxes.add({
-      editContents: 'Enter the name of this pattern',
-      minWidth: 180
-    });
-  }
+  var patternNameField = patternNameDialog.dialogColumns.add().textEditboxes.add({
+    editContents: 'Enter the name of this pattern',
+    minWidth: 180
+  });
+
   var result = patternNameDialog.show();
   if (result === true) {
-    var patternName = patternNameField.editContents;
+    patternName = patternNameField.editContents;
   }
   patternNameDialog.destroy();
   return patternName;
 }
 
 function myChooseDocument() {
-  var myDocumentNames = new Array;
+  var myDocumentNames = [];
   myDocumentNames.push("New Document");
   //Get the names of the documents
   for(var myDocumentCounter = 0;myDocumentCounter < app.documents.length; myDocumentCounter++) {
@@ -107,19 +103,16 @@ function myChooseDocument() {
   var myChooseDocumentDialog = app.dialogs.add(
       {name:"Choose a Document", canCancel:false}
   );
-  with(myChooseDocumentDialog.dialogColumns.add()) {
-    with(dialogRows.add()) {
-      with(dialogColumns.add()) {
-        staticTexts.add({staticLabel:"Place PDF in:"});
-      }
-      with(dialogColumns.add()) {
-        var myChooseDocumentDropdown = dropdowns.add({stringList:myDocumentNames, selectedIndex:0});
-      }
-    }
-  }
+  var row = myChooseDocumentDialog.dialogColumns.add().dialogRows.add();
+  row.dialogColumns.add() .staticTexts.add({staticLabel:"Place PDF in:"});
+  var myChooseDocumentDropdown =
+   row.dialogColumns.add().dropdowns.add(
+     {stringList:myDocumentNames, selectedIndex:0}
+   );
+
   var myResult = myChooseDocumentDialog.show();
-  if (myResult == true) {
-    if (myChooseDocumentDropdown.selectedIndex == 0) {
+  if (myResult === true) {
+    if (myChooseDocumentDropdown.selectedIndex === 0) {
       myDocument = app.documents.add();
 
     }
@@ -137,22 +130,18 @@ function myChooseDocument() {
 
 function myChoosePage(myDocument) {
   alert(myDocument.name);
-  var myPageNames = new Array;
+  var myPageNames = [];
   //Get the names of the pages in the document
   for(var myCounter = 0; myCounter < myDocument.pages.length;myCounter++) {
     myPageNames.push(myDocument.pages.item(myCounter).name);
   }
   var myChoosePageDialog = app.dialogs.add({name:"Choose a Page", canCancel:false});
-  with(myChoosePageDialog.dialogColumns.add()) {
-    with(dialogRows.add()) {
-      with(dialogColumns.add()) {
-        staticTexts.add({staticLabel:"Place PDF on:"});
-      }
-      with(dialogColumns.add()) {
-        var myChoosePageDropdown = dropdowns.add({stringList:myPageNames, selectedIndex:0});
-      }
-    }
-  }
+  var row = myChoosePageDialog.dialogColumns.add().dialogRows.add();
+  row.dialogColumns.add().staticTexts.add({staticLabel:"Place PDF on:"});
+  var myChoosePageDropdown = row.dialogColumns.add().dropdowns.add(
+    {stringList:myPageNames, selectedIndex:0}
+  );
+
   myChoosePageDialog.show();
   var myPage = myDocument.pages.item(myChoosePageDropdown.selectedIndex);
   myChoosePageDialog.destroy();
@@ -160,18 +149,18 @@ function myChoosePage(myDocument) {
 }
 
 function myPlacePDF(myDocument, myPage, myPDFFile) {
-  var myPDFPage;
+  var myPDFPage, myFirstPage;
   app.pdfPlacePreferences.pdfCrop = PDFCrop.cropMedia;
   var myCounter = 1;
   var myBreak = false;
-  while(myBreak == false) {
+  while(myBreak === false) {
     if (myCounter > 1) {
       myPage = myDocument.pages.add(LocationOptions.after, myPage);
     }
     app.pdfPlacePreferences.pageNumber = myCounter;
     myPDFPage = myPage.place(File(myPDFFile), ["1in", "0.5in"])[0];
     if (myCounter == 1) {
-      var myFirstPage = myPDFPage.pdfAttributes.pageNumber;
+      myFirstPage = myPDFPage.pdfAttributes.pageNumber;
     }
     else {
       if (myPDFPage.pdfAttributes.pageNumber == myFirstPage) {
