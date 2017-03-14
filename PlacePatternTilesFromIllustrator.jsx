@@ -1,4 +1,4 @@
-//PlaceMultipagePDF.jsx
+﻿//PlaceMultipagePDF.jsx
 //An InDesign JavaScript
 //Places all of the pages of a multi-page PDF for pattern tiles.
 //
@@ -69,6 +69,8 @@ function main() {
     var tileOutline = master.rectangles.add(tileOutlineLayer);
     tileOutline.geometricBounds = ["0.5in", "1in", "10.5in", "7.5in"];
     tileOutline.strokeTint = 25;
+    tileOutline.strokeWeight = 1;
+    tileOutline.strokeColor = myDocument.colors.item("Black");
 
     myPlacePDF(myDocument, myPage, myPDFFile);
   }
