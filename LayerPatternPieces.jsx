@@ -4,12 +4,17 @@
 layerTextLabels(); 
 function layerTextLabels() {
   var myDocument = app.activeDocument;
-  // moves "14" labels to "Size 14" layer
-  var targetLayer = myDocument.layers.getByName("Size 14");
-  for (i=0; i < myDocument.textFrames.length; i++) {
-    var thisFrame = myDocument.textFrames[i];
-    if (thisFrame.contents === "14") {
-      thisFrame.move(targetLayer, ElementPlacement.PLACEATEND);
+  var minSize = 0;
+  var maxSize = 24;
+  for (size=minSize; size <= maxSize; size += 2) {
+    var sizeString = size.toString();
+    // moves "size" labels to "Size ${size}" layer
+    var targetLayer = myDocument.layers.getByName("Size " + sizeString);
+    for (i=0; i < myDocument.textFrames.length; i++) {
+      var thisFrame = myDocument.textFrames[i];
+      if (thisFrame.contents === sizeString) {
+        thisFrame.move(targetLayer, ElementPlacement.PLACEATEND);
+      }
     }
   }
 }
