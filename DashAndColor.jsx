@@ -30,6 +30,12 @@ function dashAndColorize() {
     changePaths(groups[i].pathItems, moss);
   }
 
+  // change simple text
+  var textFrames = targetLayer.textFrames;
+  for (var textIndex = 0; textIndex < textFrames.length; textIndex++) {
+    textFrames[textIndex].textRange.fillColor = moss;
+  }
+
 }
 
 dashAndColorize();
