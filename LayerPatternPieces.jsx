@@ -1,7 +1,12 @@
 // An Illustrator Javascript
 // Assists with layering pattern pieces
 
-layerTextLabels(); 
+function validateSize(size) {
+  if (isNaN(size) || size < 0 || size % 2 !== 0) {
+    throw("Not a valid size, must be multiple of 2: " + size)
+  }
+}
+
 function layerTextLabels() {
   //Make certain that user interaction (display of dialogs, etc.) is turned on.
   app.userInteractionLevel = UserInteractionLevel.DISPLAYALERTS;
@@ -11,10 +16,11 @@ function layerTextLabels() {
   var dialog = new Window("dialog", "Enter Sizes");
 
   var minSize = parseInt(prompt("Enter the minimum size", 0));
-  if (!minSize || isNaN(minSize) || minSize < 0 || minSize % 2 !== 0) {
-    throw("Not a valid size, must be multiple of 2: " + minSize)
-  }
+  validateSize(minSize);
+
   var maxSize = parseInt(prompt("Enter the maximum size", 24));
+  validateSize(maxSize);
+
   for (size=minSize; size <= maxSize; size += 2) {
     var sizeString = size.toString();
     // moves "size" labels to "Size ${size}" layer
@@ -38,3 +44,5 @@ function layerTextLabels() {
     }
   }
 }
+
+layerTextLabels(); 
