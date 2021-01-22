@@ -15,10 +15,52 @@ function changePaths(paths, color) {
   }
 }
 
+function getColors() {
+  var moss = new RGBColor();
+  moss.red = 45;
+  moss.green = 106;
+  moss.blue = 44;
+
+  var clay = new RGBColor();
+  clay.red = 199;
+  clay.green = 82;
+  clay.blue = 47;
+
+  var lavender = new RGBColor();
+  lavender.red = 48;
+  lavender.green = 39;
+  lavender.blue = 119;
+
+  var caramel = new RGBColor();
+  caramel.red = 170;
+  caramel.green = 112;
+  caramel.blue = 73;
+
+  var lightPurple = new RGBColor();
+  lightPurple.red = 111;
+  lightPurple.green = 94;
+  lightPurple.blue = 246;
+
+  var darkPurple = new RGBColor();
+  darkPurple.red = 94;
+  darkPurple.green = 31;
+  darkPurple.blue = 64;
+
+  var fern = new RGBColor();
+  fern.red = 103;
+  fern.green = 143;
+  fern.blue = 95;
+
+  var pink = new RGBColor();
+  pink.red = 170;
+  pink.green = 73;
+  pink.blue = 124;
+
+  return [moss, clay, lavender, caramel, lightPurple, darkPurple, fern, pink]
+}
+
 function dashAndColorize() {
   var myDocument = app.activeDocument;
-
-  var dialog = new Window("dialog", "Enter Sizes");
 
   var minSize = parseInt(prompt("Enter the minimum size", 0));
   validateSize(minSize);
@@ -26,17 +68,7 @@ function dashAndColorize() {
   var maxSize = parseInt(prompt("Enter the maximum size", 24));
   validateSize(maxSize);
 
-  var moss = new RGBColor();
-  moss.red = 45;
-  moss.green = 106;
-  moss.blue = 44;
-
-  var burntOrange = new RGBColor();
-  burntOrange.red = 199;
-  burntOrange.green = 82;
-  burntOrange.blue = 47;
-
-  var colors = [moss, burntOrange]
+  var colors =  getColors();
   var colorIndex = 0;
 
   for (size=minSize; size <= maxSize; size += 2) {

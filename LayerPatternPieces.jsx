@@ -13,8 +13,6 @@ function layerTextLabels() {
 
   var myDocument = app.activeDocument;
 
-  var dialog = new Window("dialog", "Enter Sizes");
-
   var minSize = parseInt(prompt("Enter the minimum size", 0));
   validateSize(minSize);
 
