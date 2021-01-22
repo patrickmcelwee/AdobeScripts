@@ -31,23 +31,33 @@ function dashAndColorize() {
   moss.green = 106;
   moss.blue = 44;
 
+  var burntOrange = new RGBColor();
+  burntOrange.red = 199;
+  burntOrange.green = 82;
+  burntOrange.blue = 47;
+
+  var colors = [moss, burntOrange]
+  var colorIndex = 0;
+
   for (size=minSize; size <= maxSize; size += 2) {
+    var color = colors[colorIndex % colors.length];
+    colorIndex = colorIndex + 1;
     var sizeString = size.toString();
     var targetLayer = myDocument.layers.getByName("Size " + sizeString);
 
     // change simple paths
-    changePaths(targetLayer.pathItems, moss);
+    changePaths(targetLayer.pathItems, color);
 
     // change paths in groups
     var groups = targetLayer.groupItems;
     for (var i=0; i < groups.length; i++) {
-      changePaths(groups[i].pathItems, moss);
+      changePaths(groups[i].pathItems, color);
     }
 
     // change simple text
     var textFrames = targetLayer.textFrames;
     for (var textIndex = 0; textIndex < textFrames.length; textIndex++) {
-      textFrames[textIndex].textRange.fillColor = moss;
+      textFrames[textIndex].textRange.fillColor = color;
     }
   }
 }
