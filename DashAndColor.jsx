@@ -9,9 +9,10 @@ function validateSize(size) {
   }
 }
 
-function changePaths(paths, color) {
+function changePaths(paths, color, dashes) {
   for (var pathIndex=0; pathIndex < paths.length; pathIndex++) {
     paths[pathIndex].strokeColor = color;
+    paths[pathIndex].strokeDashes = dashes || [];
   }
 }
 
@@ -69,21 +70,37 @@ function dashAndColorize() {
   validateSize(maxSize);
 
   var colors =  getColors();
-  var colorIndex = 0;
+  var dashOptions = [
+    [],
+    [30, 2, 6, 4, 10, 5],
+    [40, 10],
+    [10, 3],
+    [24, 3, 3, 3, 3, 3],
+    [25, 5],
+    [32, 4, 6, 4],
+    [12, 6],
+    [28, 4, 8, 4],
+    [50, 5],
+    [4, 4],
+    [40, 6, 8, 6, 6, 6]
+  ];
+  var styleIndex = 0;
 
   for (size=minSize; size <= maxSize; size += 2) {
-    var color = colors[colorIndex % colors.length];
-    colorIndex = colorIndex + 1;
+    var color = colors[styleIndex % colors.length];
+    var dashes = dashOptions[styleIndex % dashOptions.length];
+    styleIndex = styleIndex + 1;
+
     var sizeString = size.toString();
     var targetLayer = myDocument.layers.getByName("Size " + sizeString);
 
     // change simple paths
-    changePaths(targetLayer.pathItems, color);
+    changePaths(targetLayer.pathItems, color, dashes);
 
     // change paths in groups
     var groups = targetLayer.groupItems;
     for (var i=0; i < groups.length; i++) {
-      changePaths(groups[i].pathItems, color);
+      changePaths(groups[i].pathItems, color, dashes);
     }
 
     // change simple text
